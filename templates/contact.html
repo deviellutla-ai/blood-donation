@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Contact Us{% endblock %}
+{% block content %}
+<div class="container" style="padding:56px 32px 80px;">
+  <div class="page-hero" style="padding-top:0;">
+    <div class="icon-badge">&#128222;</div>
+    <h1>Contact Us</h1>
+    <p>Have a question or need help? Reach out anytime.</p>
+  </div>
+
+  <div class="two-col" style="max-width:960px;margin:0 auto;">
+    <div class="card" style="padding:32px;">
+      <div class="section-title">Get in touch</div>
+      <div class="kv-list">
+        <div class="kv-row"><span class="k">&#128222; Phone</span><span class="v">9123456780</span></div>
+        <div class="kv-row"><span class="k">&#9993; Email</span><span class="v">info@bloodhelp.org</span></div>
+        <div class="kv-row"><span class="k">&#128205; Address</span><span class="v">Hyderabad, Telangana, India</span></div>
+      </div>
+      <div class="divider"></div>
+      <svg width="70" height="80" viewBox="0 0 70 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M35 5 C35 5 5 45 5 65 A30 30 0 0 0 65 65 C65 45 35 5 35 5 Z" fill="#FCEEEF" stroke="#B3122E" stroke-width="2"/>
+        <path d="M23 68 h24 M35 56 v24" stroke="#B3122E" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="card" style="padding:32px;">
+      <div class="section-title">Send us a message</div>
+      <form method="POST" action="{{ url_for('contact') }}">
+        <div class="field">
+          <label>Your Name</label>
+          <input class="input" type="text" name="name" placeholder="Enter your name" required>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input class="input" type="email" name="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label>Message</label>
+          <textarea class="input" name="message" placeholder="How can we help?" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

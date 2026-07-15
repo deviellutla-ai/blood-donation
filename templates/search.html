@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Find Blood Donors{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="icon-badge">&#128269;</div>
+  <h1>Find Blood Donors</h1>
+  <p>Search available donors by blood group and location.</p>
+</div>
+
+<div class="card form-card">
+  <form method="GET" action="{{ url_for('donors') }}">
+    <div class="field">
+      <label>Blood Group</label>
+      <select class="input" name="blood_group">
+        <option value="">Select</option>
+        {% for bg in blood_groups %}
+          <option value="{{ bg }}">{{ bg }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label>Location / City</label>
+      <input class="input" type="text" name="city" placeholder="Enter city">
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">&#128269; Search</button>
+  </form>
+</div>
+{% endblock %}

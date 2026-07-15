@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">&#10084; Donate Blood &middot; Save Lives</span>
+      <h1>Your one donation<br>can give someone<br><em>a second chance.</em></h1>
+      <p class="lead">LifeDrop connects willing donors with hospitals and patients in need, making it simple to find blood, request units, and track every donation that saves a life.</p>
+      <div class="hero-actions">
+        <a href="{{ url_for('register') }}" class="btn btn-primary">Become a Donor</a>
+        <a href="{{ url_for('donors') }}" class="btn btn-outline">Find Blood</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <strong>{{ stats.donors }}+</strong>
+          <span>Registered Donors</span>
+        </div>
+        <div class="stat">
+          <strong>{{ stats.donations }}+</strong>
+          <span>Donations Recorded</span>
+        </div>
+        <div class="stat">
+          <strong>{{ stats.lives }}+</strong>
+          <span>Lives Saved</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg class="hero-drop" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 10 C100 10 40 95 40 145 A60 60 0 0 0 160 145 C160 95 100 10 100 10 Z" fill="#B3122E"/>
+        <path d="M100 45 C100 45 62 108 62 145 A38 38 0 0 0 138 145 C138 108 100 45 100 45 Z" fill="#7A0F22" opacity="0.35"/>
+        <path d="M78 150 h44 M100 128 v44" stroke="#FFF" stroke-width="8" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="container section-head">
+    <h2>Everything you need, in one place</h2>
+    <p>From registration to donation history, LifeDrop keeps donors, patients and hospitals connected.</p>
+  </div>
+  <div class="container feature-grid">
+    <div class="card feature-card">
+      <div class="icon">&#128269;</div>
+      <h3>Find Donors Fast</h3>
+      <p>Search verified donors by blood group and city, and connect with those available near you.</p>
+    </div>
+    <div class="card feature-card">
+      <div class="icon">&#128203;</div>
+      <h3>Request &amp; Track</h3>
+      <p>Submit a blood request in minutes and follow its status from pending to fulfilled.</p>
+    </div>
+    <div class="card feature-card">
+      <div class="icon">&#128197;</div>
+      <h3>Donation History</h3>
+      <p>Every donor gets a personal dashboard with donation history and next eligible date.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;padding-bottom:80px;">
+  <div class="cta-band">
+    <div>
+      <h2>Ready to save a life today?</h2>
+      <p>Registration takes less than two minutes.</p>
+    </div>
+    <a href="{{ url_for('register') }}" class="btn btn-outline">Register as a Donor</a>
+  </div>
+</section>
+
+{% endblock %}

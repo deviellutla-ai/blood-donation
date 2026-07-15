@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="dash-shell">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="avatar">{{ current_user['full_name'][0] }}</div>
+      <div>
+        <div class="name">Hello,</div>
+        <strong>{{ current_user['full_name'].split(' ')[0] }}</strong>
+      </div>
+    </div>
+    <nav class="sidenav">
+      <a href="{{ url_for('dashboard') }}" class="active"><span class="sidenav-icon">&#8962;</span> Dashboard</a>
+      <a href="{{ url_for('history') }}"><span class="sidenav-icon">&#128197;</span> Donation History</a>
+      <a href="{{ url_for('request_status') }}"><span class="sidenav-icon">&#128203;</span> My Requests</a>
+      <a href="{{ url_for('donors') }}"><span class="sidenav-icon">&#128269;</span> Find Blood</a>
+      <a href="{{ url_for('logout') }}"><span class="sidenav-icon">&#10148;</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="dash-content">
+    <div class="dash-head">
+      <h1>Welcome back, {{ current_user['full_name'].split(' ')[0] }}</h1>
+      <p>Here's an overview of your donor activity.</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="card stat-card">
+        <span class="label">Total Donations</span>
+        <span class="value">{{ '%02d'|format(current_user['total_donations']) }}</span>
+      </div>
+      <div class="card stat-card">
+        <span class="label">Next Eligible Date</span>
+        <span class="value small">{{ current_user['next_eligible_date'] }}</span>
+      </div>
+      <div class="card stat-card">
+        <span class="label">Blood Group</span>
+        <span class="value">{{ current_user['blood_group'] }}</span>
+      </div>
+      <div class="card stat-card">
+        <span class="label">Availability</span>
+        {% if current_user['availability'] %}
+          <span class="badge badge-success" style="margin-top:6px;">&#9679; Available</span>
+        {% else %}
+          <span class="badge badge-slate" style="margin-top:6px;">&#9679; Unavailable</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="section-title">Quick Actions</div>
+    <div class="quick-actions">
+      <form method="POST" action="{{ url_for('toggle_availability') }}" style="flex:1;min-width:220px;">
+        <button type="submit" class="action-card" style="width:100%;border:1px solid var(--border);text-align:left;">
+          <span class="icon">&#128260;</span>
+          <span>
+            <strong>Update Availability</strong>
+            <span>{{ 'Mark as unavailable' if current_user['availability'] else 'Mark as available' }}</span>
+          </span>
+        </button>
+      </form>
+      <a href="{{ url_for('request_blood') }}" class="action-card">
+        <span class="icon">&#128197;</span>
+        <span>
+          <strong>Request Blood</strong>
+          <span>Submit a new blood request</span>
+        </span>
+      </a>
+    </div>
+
+    <div class="section-title">Recent Requests</div>
+    <div class="card table-card">
+      {% if recent_requests %}
+      <table>
+        <thead><tr><th>Patient</th><th>Blood Group</th><th>Hospital</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for r in recent_requests %}
+          <tr>
+            <td>{{ r['patient_name'] }}</td>
+            <td>{{ r['blood_group'] }}</td>
+            <td>{{ r['hospital_name'] }}</td>
+            <td>
+              {% if r['status']=='Pending' %}<span class="badge badge-amber">Pending</span>
+              {% elif r['status']=='Approved' %}<span class="badge badge-slate">Approved</span>
+              {% elif r['status']=='Completed' %}<span class="badge badge-success">Completed</span>
+              {% else %}<span class="badge badge-danger">{{ r['status'] }}</span>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">&#128203;</div>
+        <p>No requests yet. Submit your first blood request to see it here.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

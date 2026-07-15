@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Request Blood{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="icon-badge">&#128167;</div>
+  <h1>Request Blood</h1>
+  <p>Fill in the patient details and we'll match you with available donors.</p>
+</div>
+
+<div class="card form-card form-card-wide">
+  <form method="POST" action="{{ url_for('request_blood') }}">
+    <div class="field-row">
+      <div class="field">
+        <label>Patient Name</label>
+        <input class="input" type="text" name="patient_name" placeholder="Enter name" value="{{ form.patient_name or '' }}" required>
+      </div>
+      <div class="field">
+        <label>Blood Group Needed</label>
+        <select class="input" name="blood_group" required>
+          <option value="" disabled selected>Select</option>
+          {% for bg in blood_groups %}
+            <option value="{{ bg }}" {{ 'selected' if form.blood_group==bg }}>{{ bg }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Hospital Name</label>
+        <input class="input" type="text" name="hospital_name" placeholder="Enter hospital" value="{{ form.hospital_name or '' }}" required>
+      </div>
+      <div class="field">
+        <label>Units Required</label>
+        <select class="input" name="units_required">
+          {% for u in range(1,7) %}
+            <option value="{{ u }}">{{ u }} Unit{{ '' if u==1 else 's' }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Contact Number</label>
+        <input class="input" type="tel" name="contact_number" placeholder="Enter number" value="{{ form.contact_number or '' }}" required>
+      </div>
+      <div class="field">
+        <label>Emergency Level</label>
+        <select class="input" name="emergency_level">
+          <option value="Normal">Normal</option>
+          <option value="Urgent">Urgent</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Submit Request</button>
+  </form>
+</div>
+{% endblock %}

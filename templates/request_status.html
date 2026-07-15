@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Request Status{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="icon-badge">&#128203;</div>
+  <h1>Request Status</h1>
+  <p>Track the status of your blood requests.</p>
+</div>
+
+{% if req %}
+<div class="card form-card">
+  <div class="kv-list">
+    <div class="kv-row"><span class="k">Request ID</span><span class="v">REQ{{ '%05d'|format(req['id']) }}</span></div>
+    <div class="kv-row"><span class="k">Patient Name</span><span class="v">{{ req['patient_name'] }}</span></div>
+    <div class="kv-row"><span class="k">Blood Group</span><span class="v">{{ req['blood_group'] }}</span></div>
+    <div class="kv-row"><span class="k">Units</span><span class="v">{{ req['units_required'] }} Units</span></div>
+    <div class="kv-row"><span class="k">Hospital</span><span class="v">{{ req['hospital_name'] }}</span></div>
+    <div class="kv-row">
+      <span class="k">Status</span>
+      <span class="v">
+        {% if req['status']=='Pending' %}<span class="badge badge-amber">Pending</span>
+        {% elif req['status']=='Approved' %}<span class="badge badge-slate">Approved</span>
+        {% elif req['status']=='Completed' %}<span class="badge badge-success">Completed</span>
+        {% else %}<span class="badge badge-danger">{{ req['status'] }}</span>{% endif %}
+      </span>
+    </div>
+    <div class="kv-row"><span class="k">Date</span><span class="v">{{ req['created_at'][:10] }}</span></div>
+  </div>
+  <a href="{{ url_for('request_status') }}" class="btn btn-outline btn-block" style="margin-top:26px;">Back to My Requests</a>
+</div>
+
+{% else %}
+<div class="container" style="padding-bottom:70px;max-width:900px;">
+  {% if all_requests is none %}
+    <div class="card empty-state">
+      <div class="icon">&#128274;</div>
+      <p>Login to view your submitted requests, or check the status link sent after submitting a request.</p>
+      <a href="{{ url_for('login') }}" class="btn btn-primary" style="margin-top:16px;">Login</a>
+    </div>
+  {% elif all_requests %}
+    <div class="card table-card">
+      <table>
+        <thead><tr><th>Request ID</th><th>Patient</th><th>Blood Group</th><th>Hospital</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for r in all_requests %}
+          <tr>
+            <td><a href="{{ url_for('request_status', request_id=r['id']) }}" style="color:var(--crimson);font-weight:600;">REQ{{ '%05d'|format(r['id']) }}</a></td>
+            <td>{{ r['patient_name'] }}</td>
+            <td>{{ r['blood_group'] }}</td>
+            <td>{{ r['hospital_name'] }}</td>
+            <td>
+              {% if r['status']=='Pending' %}<span class="badge badge-amber">Pending</span>
+              {% elif r['status']=='Approved' %}<span class="badge badge-slate">Approved</span>
+              {% elif r['status']=='Completed' %}<span class="badge badge-success">Completed</span>
+              {% else %}<span class="badge badge-danger">{{ r['status'] }}</span>{% endif %}
+            </td>
+            <td>{{ r['created_at'][:10] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="card empty-state">
+      <div class="icon">&#128203;</div>
+      <p>You haven't submitted any blood requests yet.</p>
+      <a href="{{ url_for('request_blood') }}" class="btn btn-primary" style="margin-top:16px;">Request Blood</a>
+    </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

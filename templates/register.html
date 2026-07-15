@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Create Account{% endblock %}
+{% block content %}
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="auth-icon">&#128100;</div>
+    <h1>Create Your Account</h1>
+    <span class="auth-sub">Join LifeDrop and start saving lives.</span>
+
+    <form method="POST" action="{{ url_for('register') }}">
+      <div class="field">
+        <label>Full Name</label>
+        <input class="input" type="text" name="full_name" placeholder="Enter your full name" value="{{ form.full_name or '' }}" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Email</label>
+          <input class="input" type="email" name="email" placeholder="you@example.com" value="{{ form.email or '' }}" required>
+        </div>
+        <div class="field">
+          <label>Phone Number</label>
+          <input class="input" type="tel" name="phone" placeholder="10-digit number" value="{{ form.phone or '' }}" required>
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input class="input" type="password" name="password" placeholder="Create a password" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Blood Group</label>
+          <select class="input" name="blood_group" required>
+            <option value="" disabled selected>Select</option>
+            {% for bg in blood_groups %}
+              <option value="{{ bg }}" {{ 'selected' if form.blood_group==bg }}>{{ bg }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Date of Birth</label>
+          <input class="input" type="date" name="dob" value="{{ form.dob or '' }}">
+        </div>
+      </div>
+      <div class="field">
+        <label>Address</label>
+        <input class="input" type="text" name="address" placeholder="City, State" value="{{ form.address or '' }}">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Register</button>
+    </form>
+    <div class="auth-foot">Already have an account? <a href="{{ url_for('login') }}">Login</a></div>
+  </div>
+</div>
+{% endblock %}

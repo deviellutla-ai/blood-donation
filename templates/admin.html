@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<div class="dash-shell">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="avatar">A</div>
+      <div>
+        <div class="name">Signed in as</div>
+        <strong>Admin</strong>
+      </div>
+    </div>
+    <nav class="sidenav">
+      <a href="{{ url_for('admin_dashboard') }}" class="active"><span class="sidenav-icon">&#8962;</span> Dashboard</a>
+      <a href="{{ url_for('donors') }}"><span class="sidenav-icon">&#128101;</span> Donors</a>
+      <a href="{{ url_for('request_blood') }}"><span class="sidenav-icon">&#128167;</span> Blood Requests</a>
+      <a href="{{ url_for('logout') }}"><span class="sidenav-icon">&#10148;</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="dash-content">
+    <div class="dash-head">
+      <h1>Dashboard Overview</h1>
+      <p>Monitor donors, requests and donations across LifeDrop.</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="card stat-card">
+        <span class="label">Total Users</span>
+        <span class="value">{{ total_users }}</span>
+      </div>
+      <div class="card stat-card">
+        <span class="label">Available Donors</span>
+        <span class="value">{{ total_donors }}</span>
+      </div>
+      <div class="card stat-card">
+        <span class="label">Total Requests</span>
+        <span class="value">{{ total_requests }}</span>
+      </div>
+      <div class="card stat-card">
+        <span class="label">Today's Donations</span>
+        <span class="value">{{ today_donations }}</span>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:30px;">
+      <div class="card" style="padding:26px;">
+        <div class="section-title">Blood Group Statistics</div>
+        {% set colors = ['#B3122E','#D3495E','#E97F8C','#F3AEB6','#7A0F22','#C97686','#EAC3C9','#5B6472'] %}
+        {% for row in bg_stats %}
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="width:60px;font-size:13px;font-weight:600;">{{ row['blood_group'] }}</span>
+          <div style="flex:1;background:#F1EDEA;border-radius:6px;height:10px;overflow:hidden;">
+            <div style="width:{{ (row['c'] / total_users * 100) if total_users else 0 }}%;background:{{ colors[loop.index0 % colors|length] }};height:100%;border-radius:6px;"></div>
+          </div>
+          <span style="width:24px;font-size:12.5px;color:var(--slate);text-align:right;">{{ row['c'] }}</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="card" style="padding:26px;">
+        <div class="section-title">Requests Overview</div>
+        {% for row in req_status %}
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="width:90px;font-size:13px;font-weight:600;">{{ row['status'] }}</span>
+          <div style="flex:1;background:#F1EDEA;border-radius:6px;height:10px;overflow:hidden;">
+            {% set pct = (row['c'] / total_requests * 100) if total_requests else 0 %}
+            <div style="width:{{ pct }}%;background:{{ 'var(--success)' if row['status']=='Completed' else ('var(--amber)' if row['status']=='Pending' else 'var(--crimson)') }};height:100%;border-radius:6px;"></div>
+          </div>
+          <span style="width:24px;font-size:12.5px;color:var(--slate);text-align:right;">{{ row['c'] }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="section-title">Recent Blood Requests</div>
+    <div class="card table-card">
+      {% if recent_requests %}
+      <table>
+        <thead><tr><th>Patient</th><th>Blood Group</th><th>Hospital</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for r in recent_requests %}
+          <tr>
+            <td>{{ r['patient_name'] }}</td>
+            <td>{{ r['blood_group'] }}</td>
+            <td>{{ r['hospital_name'] }}</td>
+            <td>
+              {% if r['status']=='Pending' %}<span class="badge badge-amber">Pending</span>
+              {% elif r['status']=='Approved' %}<span class="badge badge-slate">Approved</span>
+              {% elif r['status']=='Completed' %}<span class="badge badge-success">Completed</span>
+              {% else %}<span class="badge badge-danger">{{ r['status'] }}</span>{% endif %}
+            </td>
+            <td style="display:flex;gap:8px;">
+              {% if r['status'] != 'Approved' %}
+              <a href="{{ url_for('admin_update_request', request_id=r['id'], new_status='Approved') }}" class="btn btn-outline btn-sm">Approve</a>
+              {% endif %}
+              {% if r['status'] != 'Completed' %}
+              <a href="{{ url_for('admin_update_request', request_id=r['id'], new_status='Completed') }}" class="btn btn-primary btn-sm">Complete</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">&#128203;</div>
+        <p>No requests submitted yet.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

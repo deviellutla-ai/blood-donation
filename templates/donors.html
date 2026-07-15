@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Available Donors{% endblock %}
+{% block content %}
+<div class="container" style="padding-top:44px;padding-bottom:70px;">
+  <div class="page-hero" style="padding-top:0;">
+    <div class="icon-badge">&#128101;</div>
+    <h1>Available Donors</h1>
+    <p>{{ donor_list|length }} donor{{ '' if donor_list|length==1 else 's' }} found</p>
+  </div>
+
+  <div class="card" style="padding:20px 24px;margin-bottom:22px;">
+    <form method="GET" action="{{ url_for('donors') }}" class="filter-bar">
+      <div class="field">
+        <label>Blood Group</label>
+        <select class="input" name="blood_group">
+          <option value="">All</option>
+          {% for bg in blood_groups %}
+            <option value="{{ bg }}" {{ 'selected' if blood_group==bg }}>{{ bg }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Location / City</label>
+        <input class="input" type="text" name="city" placeholder="Enter city" value="{{ city }}">
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+
+  <div class="card table-card">
+    {% if donor_list %}
+    <table>
+      <thead><tr><th>Name</th><th>Blood Group</th><th>Location</th><th>Contact</th><th>Availability</th></tr></thead>
+      <tbody>
+        {% for d in donor_list %}
+        <tr>
+          <td>{{ d['full_name'] }}</td>
+          <td><span class="badge badge-danger" style="background:var(--crimson-soft);color:var(--crimson);">{{ d['blood_group'] }}</span></td>
+          <td>{{ d['address'] or '—' }}</td>
+          <td>{{ d['phone'] or '—' }}</td>
+          <td>
+            {% if d['availability'] %}
+              <span class="badge badge-success">&#9679; Available</span>
+            {% else %}
+              <span class="badge badge-slate">&#9679; Unavailable</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <div class="icon">&#128101;</div>
+      <p>No donors match your search. Try a different blood group or city.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
